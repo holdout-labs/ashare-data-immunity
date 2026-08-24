@@ -18,7 +18,7 @@ validation), board-aware price-limit and suspension detection, quality
 audit (listing / coverage / continuity) and snapshot versioning (sha256
 manifests). Python 3.11+, **zero dependencies**, Windows / Linux / macOS.
 
-**Status:** v0.1 —alpha. The audit structure is distilled from a
+**Status:** v0.1.1 alpha, published on PyPI. The audit structure is distilled from a
 production A-share pipeline; board rules follow the current exchange
 conventions and should be re-checked against the exchanges' rule
 documents before you rely on them.
@@ -62,7 +62,7 @@ here trades, prices, or decides.
 ## Quick start
 
 ```bash
-# install from PyPI (once published)
+# install the published package from PyPI
 pip install ashare-data-immunity
 
 # or run without installing anything:
