@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ashare-data-immunity"
-version = "0.1.1"
+version = "0.1.2"
 description = "A-share daily-bar quality checks: OHLCV cleaning, board-aware price limits and suspensions, listing and continuity audits, and SHA-256 snapshot manifests."
 readme = "README.md"
 requires-python = ">=3.11"
