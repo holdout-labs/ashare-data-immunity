@@ -38,6 +38,30 @@ def test_price_limit_ratios() -> None:
     assert price_limit_ratio("688001", is_st=True) == pytest.approx(0.20)  # STAR ST stays 20%
 
 
+def test_st_ratio_date_aware_boundary() -> None:
+    """2026-07-06 生效：主板 ST/*ST 前后 5%→10%；非主板不受影响。"""
+    assert price_limit_ratio("600000", is_st=True, as_of="2026-06-30") == pytest.approx(0.05)
+    assert price_limit_ratio("600000", is_st=True, as_of="2026-07-05") == pytest.approx(0.05)
+    assert price_limit_ratio("600000", is_st=True, as_of="2026-07-06") == pytest.approx(0.10)
+    assert price_limit_ratio("600000", is_st=True, as_of="2026-09-01") == pytest.approx(0.10)
+    assert price_limit_ratio("600000", is_st=True) == pytest.approx(0.10)  # None = 现行规则
+    assert price_limit_ratio("300750", is_st=True, as_of="2026-06-30") == pytest.approx(0.20)
+    assert price_limit_ratio("920001", is_st=True, as_of="2026-06-30") == pytest.approx(0.30)
+
+
+def test_detect_limits_st_date_aware_crosses_boundary() -> None:
+    """同序列跨 2026-07-06：生效日前按 5%、生效日（含）起按 10% 各自判定。"""
+    bars = [
+        _bar("2026-07-01", close=10.00),
+        _bar("2026-07-02", close=10.50),  # 旧规则 5%：10.00*1.05 → limit up
+        _bar("2026-07-03", close=10.50),  # 普通日（prev 10.50）
+        _bar("2026-07-06", close=11.55),  # 新规则 10%：10.50*1.10 → limit up
+    ]
+    events = detect_limits(bars, "600000", is_st=True)
+    assert [e["date"] for e in events] == ["2026-07-02", "2026-07-06"]
+    assert [e["ratio"] for e in events] == [pytest.approx(0.05), pytest.approx(0.10)]
+
+
 def test_detect_limit_up() -> None:
     bars = [
         _bar("2026-08-03", close=10.00),
