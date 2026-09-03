@@ -7,6 +7,7 @@ Subcommands:
 - ``audit``           quality audit (listing / coverage / continuity)
 - ``snapshot``        build a sha256 manifest for a list of files
 - ``snapshot-compare`` compare two manifests
+- ``repair``          apply reviewed OHLC corrections with an append-only log
 - ``version``         print version
 """
 
@@ -22,6 +23,7 @@ from . import __version__
 from .audit import run_quality_audit
 from .cleaning import clean_bars, validate_bars
 from .limits import board_of, detect_limits, suspension_days
+from .repair import append_repair_record, repair_bars
 from .snapshot import build_snapshot, compare_snapshots
 
 
@@ -75,6 +77,14 @@ def build_parser() -> argparse.ArgumentParser:
     snap_compare = sub.add_parser("snapshot-compare", help="compare two manifests")
     snap_compare.add_argument("--before", required=True)
     snap_compare.add_argument("--after", required=True)
+
+    repair = sub.add_parser("repair", help="apply reviewed OHLC corrections (existing bars only)")
+    repair.add_argument("--bars", required=True, help="bars JSON list to repair")
+    repair.add_argument("--corrections", required=True, help="JSON list of {date, open, high, low, close}")
+    repair.add_argument("--code", default="", help="code label recorded in the log")
+    repair.add_argument("--note", default="", help="why this repair happens (recorded in the log)")
+    repair.add_argument("--log", default=None, help="append-only JSONL repair log path")
+    repair.add_argument("--out", default=None, help="write repaired bars JSON")
 
     sub.add_parser("version", help="print version")
     return parser
@@ -143,6 +153,30 @@ def main(argv: list[str] | None = None) -> int:
         result = compare_snapshots(before, after)
         _print_json(result)
         return 0 if result["equal"] else 1
+
+    if args.command == "repair":
+        bars = _load_bars(args.bars)
+        corrections = _load_bars(args.corrections)
+        report = repair_bars(
+            bars, corrections, code=args.code, note=args.note
+        )
+        if args.out:
+            Path(args.out).write_text(
+                json.dumps(report["bars"], ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        if args.log:
+            append_repair_record(args.log, report)
+        _print_json(
+            {
+                "schema_version": report["schema_version"],
+                "code": report["code"],
+                "applied_count": report["applied_count"],
+                "skipped_count": report["skipped_count"],
+                "skipped": report["skipped"],
+                "safety": report["safety"],
+            }
+        )
+        return 0 if report["skipped_count"] == 0 else 1
 
     parser.error(f"unknown command: {args.command}")
     return 2

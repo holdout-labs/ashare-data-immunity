@@ -94,6 +94,16 @@ imm snapshot --name v2026-08-01 --cutoff 2026-08-01 \
 imm snapshot-compare --before manifests/v1.json --after manifests/v2.json
 ```
 
+When the detector finds something wrong, repair it with provenance
+(overwrite existing bars only, append-only log):
+
+```bash
+imm repair --bars bars.json \
+  --corrections 'corrections.json' --code 600000 \
+  --note "watchdog case: OHLC scale corruption" \
+  --log repairs.jsonl --out bars_fixed.json
+```
+
 ## Commands
 
 | Command | What it does |
@@ -103,6 +113,7 @@ imm snapshot-compare --before manifests/v1.json --after manifests/v2.json
 | `audit` | Listing (codes not in the injected universe), history coverage, calendar continuity; appends a JSONL record per day |
 | `snapshot` | sha256 manifest of a file list with name + cutoff |
 | `snapshot-compare` | added / removed / changed files between two manifests |
+| `repair` | Apply reviewed OHLC corrections to existing bars (unknown dates / inconsistent OHLC are skipped and reported); optional append-only JSONL repair log and `--out` for the repaired bars |
 | `version` | Print version |
 
 ## Board rules (v0.1, current from 2026-07-06)
