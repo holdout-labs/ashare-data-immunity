@@ -93,7 +93,7 @@ imm snapshot-compare --before manifests/v1.json --after manifests/v2.json
 | --- | --- |
 | `clean` | 校验 K 线数据（缺失 / 非有限 / 非正字段、OHLC 一致性、负成交量）；可选地净化（非有限和非正价格 -> `None`，成交量保持 >=0），并可选择丢弃非正行 |
 | `limits` | 板块分类、单只代码的涨跌停事件（涨 / 跌，含涨跌幅与涨跌停价）及停牌日 |
-| `audit` | 上市状态（不在注入股票池中的代码）、历史覆盖、日历连续性；每天追加一条 JSONL 记录 |
+| `audit` | 每日质量审计：上市状态检查（监控代码从注入股票池中消失 = 疑似**退市或长期停牌**）、历史覆盖、日历连续性；每天追加一条 JSONL 记录 |
 | `snapshot` | 文件列表的 sha256 清单，带名称（name）与截止日期（cutoff） |
 | `snapshot-compare` | 两份清单之间的新增 / 删除 / 变更文件 |
 | `version` | 打印版本号 |

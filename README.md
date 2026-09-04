@@ -110,7 +110,7 @@ imm repair --bars bars.json \
 | --- | --- |
 | `clean` | Validate bars (missing/non-finite/non-positive fields, OHLC consistency, negative volume); optionally sanitize (non-finite and non-positive prices -> `None`, volume kept >=0) and optionally drop non-positive rows |
 | `limits` | Board classification, price-limit events (up/down with ratio and limit price) and suspension days for one code |
-| `audit` | Listing (codes not in the injected universe), history coverage, calendar continuity; appends a JSONL record per day |
+| `audit` | Daily quality audit: listing/universe check (watchlist codes missing from the injected universe — suspected **delisted or suspended**), history coverage, calendar continuity; appends a JSONL record per day |
 | `snapshot` | sha256 manifest of a file list with name + cutoff |
 | `snapshot-compare` | added / removed / changed files between two manifests |
 | `repair` | Apply reviewed OHLC corrections to existing bars (unknown dates / inconsistent OHLC are skipped and reported); optional append-only JSONL repair log and `--out` for the repaired bars |
