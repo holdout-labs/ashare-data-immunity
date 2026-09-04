@@ -17,7 +17,7 @@ from .cleaning import clean_bars, validate_bars
 from .limits import board_of, detect_limits, price_limit_ratio, suspension_days
 from .snapshot import build_snapshot, compare_snapshots
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 __all__ = [
     "board_of",
