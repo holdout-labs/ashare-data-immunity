@@ -5,6 +5,8 @@
 ![CI](https://github.com/holdout-labs/ashare-data-immunity/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
+> 收录于 [awesome-quant](https://github.com/wilsonfreitas/awesome-quant) —— 量化库精选清单（Market Data & Data Sources 板块）。
+
 ## 中文说明
 
 `ashare-data-immunity` 面向 A 股日线数据质量检查。它可以校验和清洗
