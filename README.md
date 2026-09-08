@@ -7,6 +7,10 @@
 
 > Featured in [awesome-quant](https://github.com/wilsonfreitas/awesome-quant) — the curated list of quant libraries (Market Data & Data Sources section).
 
+> Part of [Holdout](https://github.com/holdout-labs): open-source infrastructure for AI-assisted quantitative research. This tool owns the data-evidence layer before an agent or researcher moves a claim forward.
+
+> 属于 Holdout：AI 辅助量化投研的开源基础设施。本工具负责数据证据层，先确认数据是否站得住，再让 agent 或研究者继续推进结论。
+
 ## 中文说明
 
 `ashare-data-immunity` 面向 A 股日线数据质量检查。它可以校验和清洗
